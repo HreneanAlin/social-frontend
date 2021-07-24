@@ -43,21 +43,31 @@ export const USER_BY_USERNAME = gql`
 					title
 					image
 				}
-			
 			}
 		}
 	}
 `
 
 export const POSTS_BY_USERNAME = gql`
-	query PostsByUsername($username: String!) {
-		postsByUsername(username: $username) {
-			text
-			title
-			date
-			postimageSet {
+	query PostsByUsername($username: String!, $first: Int!, $skip: Int) {
+		postsByUsernamePagination(username: $username, first: $first, skip: $skip) {
+			hasNext
+			postsByUsername {
+				id
+				text
 				title
-				image
+				date
+				user {
+					id
+					firstName
+					lastName
+					profilePicture
+					username
+				}
+				postimageSet {
+					title
+					image
+				}
 			}
 		}
 	}
@@ -86,6 +96,24 @@ export const COMMENTS_BY_POST = gql`
 				firstName
 				lastName
 				profilePicture
+			}
+		}
+	}
+`
+export const COMMENTS_BY_POST_PAGINATION = gql`
+	query CommentsByPostPagination($postId: Int!, $first: Int!, $skip: Int) {
+		commentsByPostPagination(postId: $postId, first: $first, skip: $skip) {
+			hasNext
+			commentsByPost {
+				id
+				date
+				text
+				user {
+					username
+					firstName
+					lastName
+					profilePicture
+				}
 			}
 		}
 	}

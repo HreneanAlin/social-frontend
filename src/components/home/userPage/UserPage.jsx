@@ -37,7 +37,7 @@ const UserPage = () => {
 	const dispatch = useDispatch()
 	const { visitator } = useSelector(state => state.visitator)
 	const { username } = queryString.parse(window.location.search)
-	const { data } = useQuery(USER_BY_USERNAME, {
+	const { data} = useQuery(USER_BY_USERNAME, {
 		variables: {
 			username,
 		},

@@ -1,9 +1,11 @@
-import { ApolloClient, InMemoryCache, HttpLink, from } from "@apollo/client"
+import { ApolloClient, InMemoryCache, HttpLink, from , split } from "@apollo/client"
+import { getMainDefinition } from '@apollo/client/utilities';
 import {createUploadLink} from "apollo-upload-client"
 import { onError } from "@apollo/client/link/error"
 import { setContext } from '@apollo/client/link/context';
 import { persistCache, LocalStorageWrapper } from 'apollo3-cache-persist';
 import getRefreshToken from "./getRefreshToken"
+import { WebSocketLink } from '@apollo/client/link/ws';
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
 	if (graphQLErrors) {
@@ -12,6 +14,12 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 		})
 	}
 })
+const wsLink = new WebSocketLink({
+	uri: 'ws://127.0.0.1:8000/graphql/',
+	options: {
+	  reconnect: true
+	}
+  });
 
 const link = from([
 	errorLink,
@@ -42,10 +50,21 @@ const authLink = setContext(async (_, { headers }) => {
   });
 
 const cache = new InMemoryCache() 
+const splitLink = split(
+	({ query }) => {
+	  const definition = getMainDefinition(query);
+	  return (
+		definition.kind === 'OperationDefinition' &&
+		definition.operation === 'subscription'
+	  );
+	},
+	wsLink,
+	link,
+  );
   
 const client = new ApolloClient({
 	cache,
-	link: authLink.concat(link),
+	link: authLink.concat(splitLink),
 })
 
 const initData = "this is the init data"

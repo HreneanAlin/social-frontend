@@ -21,7 +21,7 @@ import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight"
 import {DateTime} from "luxon"
 import CommentSection from "./CommentSection"
 import AddComment from "./AddComment"
-const PostCard = ({ post: { id, title, text, date, postimageSet },user,postDate }) => {
+const PostCard = ({ post: { id, title, text, date, postimageSet },user,postDate, ref }) => {
 
 
 	const classes = useStyle()
@@ -38,7 +38,7 @@ const PostCard = ({ post: { id, title, text, date, postimageSet },user,postDate 
 	}
  console.log(postDate)
 	return (
-		<Card className={classes.postCard}>
+		<Card ref={ref} className={classes.postCard}>
 			<CardActionArea>
 				<div className={classes.postUserInfo}>
 					<Avatar src={`http://127.0.0.1:8000/media/${user.profilePicture}`}/>

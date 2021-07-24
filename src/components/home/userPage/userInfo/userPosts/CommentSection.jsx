@@ -1,5 +1,6 @@
 import {
 	Avatar,
+	CircularProgress,
 	Divider,
 	List,
 	ListItem,
@@ -10,35 +11,70 @@ import {
 import { DateTime } from "luxon"
 import React, { useEffect, useState } from "react"
 import useStyles from "../../../style"
-import { useQuery } from "@apollo/client"
-import { COMMENTS_BY_POST } from "../../../../../graphQl/querys/queries"
+import { useQuery, useSubscription } from "@apollo/client"
+import { COMMENTS_BY_POST_PAGINATION } from "../../../../../graphQl/querys/queries"
+import { Waypoint } from "react-waypoint"
 import AddComment from "./AddComment"
-const CommentSection = ({ id,setRender }) => {
+import { NEW_POST_COMMENT_SUB } from "../../../../../graphQl/subscriptions/subscriptions"
+const CommentSection = ({ id, setRender }) => {
 	const classes = useStyles()
-	
-	const { data, refetch } = useQuery(COMMENTS_BY_POST, {
-		variables: {
+    const {data:newCommData,loading:commLoading} = useSubscription(NEW_POST_COMMENT_SUB,{
+		variables:{
 			postId: id,
-		},
+		}
 	})
-	 
-	useEffect(() =>{},[
-		data
-	])
-	if (data) {
-		console.log(data)
+	const { data, refetch, fetchMore, networkStatus } = useQuery(
+		COMMENTS_BY_POST_PAGINATION,
+		{
+			variables: {
+				postId: id,
+				first: 4,
+			},
+			notifyOnNetworkStatusChange: true,
+		}
+	)
+    if(newCommData){
+    console.log("🚀 ~ file: CommentSection.jsx ~ line 33 ~ CommentSection ~ newCommData", newCommData)
+		
+	}
+
+	const handlePagination = () => {
+		fetchMore({
+			variables: {
+				postId: id,
+				first: 4,
+				skip: data.commentsByPostPagination.commentsByPost.length,
+			},
+			updateQuery: (pv, { fetchMoreResult }) => {
+				console.log(
+					"🚀 ~ file: CommentSection.jsx ~ line 39 ~ handlePagination ~ fetchMoreResult",
+					fetchMoreResult
+				)
+				if (!fetchMoreResult) {
+					return pv
+				}
+				return {
+					commentsByPostPagination: {
+						_typename: "CommentPagination",
+						commentsByPost: [
+							...pv.commentsByPostPagination.commentsByPost,
+							...fetchMoreResult.commentsByPostPagination.commentsByPost,
+						],
+						hasNext: fetchMoreResult.commentsByPostPagination.hasNext,
+					},
+				}
+			},
+		})
 	}
 
 	return (
 		<>
-			{data?.commentsByPost ? (
+			{data?.commentsByPostPagination?.commentsByPost ? (
 				<>
 					<Divider />
 					<List className={classes.commentSection}>
-						{data.commentsByPost
-							.slice()
-							.sort((a, b) => a.id - b.id)
-							.map((comment, index) => (
+						{data.commentsByPostPagination.commentsByPost.map(
+							(comment, index) => (
 								<React.Fragment key={index}>
 									<ListItem alignItems="flex-start">
 										<ListItemAvatar>
@@ -47,7 +83,9 @@ const CommentSection = ({ id,setRender }) => {
 											/>
 										</ListItemAvatar>
 										<ListItemText
-											primary={`${comment.user.firstName} ${comment.user.lastName} at ${DateTime.fromISO(comment.date)
+											primary={`${comment.user.firstName} ${
+												comment.user.lastName
+											} at ${DateTime.fromISO(comment.date)
 												.setLocale("ro")
 												.toLocaleString({
 													month: "long",
@@ -69,15 +107,22 @@ const CommentSection = ({ id,setRender }) => {
 											}
 										/>
 									</ListItem>
-									{data.commentsByPost.length - 1 === index ? null : (
+									{index ===
+										data.commentsByPostPagination.commentsByPost.length - 2 && (
+										<Waypoint onEnter={() => handlePagination()} />
+									)}
+									{data.commentsByPostPagination.commentsByPost.length - 1 ===
+									index ? null : (
 										<Divider variant="inset" component="li" />
 									)}
 								</React.Fragment>
-							))}
+							)
+						)}
 					</List>
+					{networkStatus === 3 && <CircularProgress />}
 				</>
 			) : null}
-			 <AddComment setRender={setRender} loadComments={refetch}  id={id}/>
+			<AddComment setRender={setRender} fetchMoreComments={fetchMore} id={id} />
 		</>
 	)
 }

@@ -1,40 +1,93 @@
-import { Container, Typography } from "@material-ui/core"
-import React from "react"
+import { CircularProgress, Container, Typography } from "@material-ui/core"
+import React, { useState } from "react"
 import useStyle from "../../../style"
 import PostCard from "./PostCard"
 import { useSelector } from "react-redux"
+import { Waypoint } from "react-waypoint"
+import { useQuery } from "@apollo/client"
+import queryString from "query-string"
 
+import { POSTS_BY_USERNAME } from "../../../../../graphQl/querys/queries"
+
+const first = 2
 const UserPosts = () => {
 	const classes = useStyle()
 	const { visitator } = useSelector(state => state.visitator)
-	console.log(
-		"🚀 ~ file: UserPosts.jsx ~ line 14 ~ UserPosts ~ visitator",
-		visitator
-	)
+	const { username } = queryString.parse(window.location.search)
+	const { data, loading, fetchMore,networkStatus } = useQuery(POSTS_BY_USERNAME, {
+		variables: {
+			username,
+			first: first,
+		},
+		notifyOnNetworkStatusChange:true
+	})
+    console.log("🚀 ~ file: UserPosts.jsx ~ line 17 ~ UserPosts ~ networkStatus", networkStatus)
+
 
 	return (
 		<Container className={classes.postsContainer}>
-			{visitator?.username ? (
+			{username && fetchMore ? (
 				<>
 					<Typography variant="h3" align="center" gutterBottom>
 						POSTS
 					</Typography>
-					{visitator.postSet?.length ? (
+
+					{data?.postsByUsernamePagination?.postsByUsername?.length ? (
 						<>
-							{visitator.postSet
-								.slice()
-								.sort((prev, next) => next.id - prev.id)
-								.map(post => (
-									<PostCard
-										key={post.id}
-										post={post}
-										user={visitator}
-										postDate={post.date}
-									/>
+							{data?.postsByUsernamePagination.postsByUsername
+								//.slice()
+								//.sort((prev, next) => next.id - prev.id)
+								.map((post, index) => (
+									<React.Fragment key={index}>
+										<PostCard
+											key={post.id}
+											post={post}
+											user={post.user}
+											postDate={post.date}
+										/>
+										{index ===
+											data.postsByUsernamePagination.postsByUsername.length -
+												2 && (
+											<Waypoint
+												onEnter={() =>
+													fetchMore({
+														variables: {
+															username: username,
+															first: first,
+															skip:
+																data.postsByUsernamePagination.postsByUsername
+																	.length,
+														},
+														updateQuery: (pv, { fetchMoreResult }) => {
+															if (!fetchMoreResult) {
+																return pv
+															}
+															return {
+																postsByUsernamePagination: {
+																	_typename: "PostPagination",
+																	postsByUsername: [
+																		...pv.postsByUsernamePagination
+																			.postsByUsername,
+																		...fetchMoreResult.postsByUsernamePagination
+																			.postsByUsername,
+																	],
+																	hasNext:
+																		fetchMoreResult.postsByUsernamePagination
+																			.hasNext,
+																},
+															}
+														},
+													})
+												}
+											/>
+										)}
+									</React.Fragment>
 								))}
+								{networkStatus === 3 && <CircularProgress/>}
+								{!data?.postsByUsernamePagination?.hasNext && <Typography>No more Posts</Typography>}
 						</>
 					) : (
-						<Typography>{visitator.username} has no Posts</Typography>
+						<Typography>{username} has no Posts</Typography>
 					)}
 				</>
 			) : null}
