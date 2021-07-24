@@ -13,12 +13,6 @@ const PasswordReset = () => {
 	const [reset, { data, error, loading }] = useMutation(PASSWORD_RESET)
 	const generalClasses = useGeneralStyles()
 
-	useEffect(() => {
-		if (data) {
-			console.log(data)
-		}
-	}, [data])
-
 	const prepareToSend = e => {
 		e.preventDefault()
 		const { tkn } = queryString.parse(window.location.search)

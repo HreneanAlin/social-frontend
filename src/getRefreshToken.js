@@ -21,7 +21,6 @@ const getRefreshToken = async (refreshTokenOld, token) => {
 			  }`,
 			},
 		})
-		console.log("data from get refresh",data)
          if(data?.refreshToken?.success){
 			 
 			 localStorage.setItem("token",data.refreshToken.token)

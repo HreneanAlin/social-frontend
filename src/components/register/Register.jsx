@@ -45,7 +45,6 @@ const Register = () => {
 		getData()
 	}, [])
 	useEffect(() => {
-		console.log("rendered")
 		if (data) {
 			const {
 				register: { success, token, errors, refreshToken },

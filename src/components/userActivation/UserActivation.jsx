@@ -19,7 +19,6 @@ const UserActivation = () => {
 	const { tkn } = queryString.parse(window.location.search)
 	useEffect(() => {
 		if (tkn) {
-			console.log(tkn)
 			activateAccount({
 				variables: {
 					token: tkn,

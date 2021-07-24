@@ -11,19 +11,14 @@ import {
 import { DateTime } from "luxon"
 import React, { useEffect, useState } from "react"
 import useStyles from "../../../style"
-import { useQuery, useSubscription } from "@apollo/client"
+import { useQuery, useSubscription, } from "@apollo/client"
 import { COMMENTS_BY_POST_PAGINATION } from "../../../../../graphQl/querys/queries"
 import { Waypoint } from "react-waypoint"
 import AddComment from "./AddComment"
 import { NEW_POST_COMMENT_SUB } from "../../../../../graphQl/subscriptions/subscriptions"
 const CommentSection = ({ id, setRender }) => {
 	const classes = useStyles()
-    const {data:newCommData,loading:commLoading} = useSubscription(NEW_POST_COMMENT_SUB,{
-		variables:{
-			postId: id,
-		}
-	})
-	const { data, refetch, fetchMore, networkStatus } = useQuery(
+	const { data, fetchMore, networkStatus, subscribeToMore } = useQuery(
 		COMMENTS_BY_POST_PAGINATION,
 		{
 			variables: {
@@ -33,11 +28,30 @@ const CommentSection = ({ id, setRender }) => {
 			notifyOnNetworkStatusChange: true,
 		}
 	)
-    if(newCommData){
-    console.log("🚀 ~ file: CommentSection.jsx ~ line 33 ~ CommentSection ~ newCommData", newCommData)
-		
-	}
 
+useEffect(() => {
+	subscribeToMore({
+		document:NEW_POST_COMMENT_SUB,
+		variables:{
+			postId: id,
+		},
+		updateQuery:(prev,{subscriptionData}) =>{
+			if(!subscriptionData.data) return prev;
+			const newItem = subscriptionData.data.newPostComment
+			return {
+				commentsByPostPagination: {
+					_typename: "CommentPagination",
+					commentsByPost: [
+						newItem,
+						...prev.commentsByPostPagination.commentsByPost,
+					],
+					hasNext: prev.commentsByPostPagination.hasNext,
+				},
+			}
+		}
+	})
+},[subscribeToMore])
+	
 	const handlePagination = () => {
 		fetchMore({
 			variables: {
@@ -46,10 +60,6 @@ const CommentSection = ({ id, setRender }) => {
 				skip: data.commentsByPostPagination.commentsByPost.length,
 			},
 			updateQuery: (pv, { fetchMoreResult }) => {
-				console.log(
-					"🚀 ~ file: CommentSection.jsx ~ line 39 ~ handlePagination ~ fetchMoreResult",
-					fetchMoreResult
-				)
 				if (!fetchMoreResult) {
 					return pv
 				}

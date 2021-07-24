@@ -37,7 +37,6 @@ const authLink = setContext(async (_, { headers }) => {
 	
 	let token = localStorage.getItem('token');
 	const {data:{refreshToken}} = await getRefreshToken(localStorage.getItem('refreshToken'),token)
-    console.log("🚀 ~ file: config.js ~ line 27 ~ authLink ~ newToken", refreshToken.token)
     token = refreshToken.token
 
 	return {
