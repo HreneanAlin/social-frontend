@@ -12,7 +12,7 @@ export const REGISTER_MUTATION = gql`
 		$country: String!
 	) {
 		register(
-			profilePicture:$profilePicture
+			profilePicture: $profilePicture
 			email: $email
 			username: $username
 			password1: $password1
@@ -80,7 +80,11 @@ export const PASSWORD_RESET = gql`
 		$password1: String!
 		$password2: String!
 	) {
-		passwordReset(token: $token, newPassword1: $password1, newPassword2: $password2){
+		passwordReset(
+			token: $token
+			newPassword1: $password1
+			newPassword2: $password2
+		) {
 			success
 			errors
 		}
@@ -88,8 +92,8 @@ export const PASSWORD_RESET = gql`
 `
 
 export const REFRESH_TOKEN = gql`
-    mutation RefreshToken($refreshToken:String!){
-		refreshToken(refreshToken: $refreshToken){
+	mutation RefreshToken($refreshToken: String!) {
+		refreshToken(refreshToken: $refreshToken) {
 			success
 			errors
 			token
@@ -99,37 +103,45 @@ export const REFRESH_TOKEN = gql`
 `
 
 export const LOG_OUT = gql`
-   mutation RevokeToken($refreshToken:String!){
-	    revokeToken(refreshToken: $refreshToken){
+	mutation RevokeToken($refreshToken: String!) {
+		revokeToken(refreshToken: $refreshToken) {
 			success
 			errors
 		}
-   }
+	}
 `
 
 export const ADD_TEMPORARY_IMAGE = gql`
-  mutation AddTemporaryImage($image:Upload!){
-	  addImage(image:$image){
-		  tempImage{
-			  id
-			  image
-		  }
-	  }
-  }
+	mutation AddTemporaryImage($image: Upload!) {
+		addImage(image: $image) {
+			tempImage {
+				id
+				image
+			}
+		}
+	}
 `
 
 export const ADD_POST = gql`
-  mutation AddPost($title:String!,$text:String!,$images:[ImageDescType]!){
-	  addPost(title:$title,text:$text,images:$images){
-		  success
-	  }
-  }
+	mutation AddPost($title: String!, $text: String!, $images: [ImageDescType]!) {
+		addPost(title: $title, text: $text, images: $images) {
+			success
+		}
+	}
 `
 
 export const ADD_COMMENT_POST = gql`
-  mutation AddCommentPost($text:String!,$postId:Int!){
-	  addCommentPost(commentText:$text,postId:$postId){
-		  success
-	  }
-  }
+	mutation AddCommentPost($text: String!, $postId: Int!) {
+		addCommentPost(commentText: $text, postId: $postId) {
+			success
+		}
+	}
+`
+
+export const SEND_FRIEND_REQUEST = gql`
+	mutation SendFriendRequest($username: String!) {
+		sendFriendRequest(username: $username) {
+			success
+		}
+	}
 `

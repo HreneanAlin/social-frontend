@@ -3,6 +3,7 @@ import { gql } from "@apollo/client"
 export const CURRENT_USER = gql`
 	query {
 		me {
+			id
 			username
 			verified
 			firstName
@@ -115,6 +116,22 @@ export const COMMENTS_BY_POST_PAGINATION = gql`
 					profilePicture
 				}
 			}
+		}
+	}
+`
+
+export const MY_FRIEND_REQUESTS = gql`
+	query MyFriendRequests {
+		myFriendRequests {
+			id
+			userFrom {
+				username
+				profilePicture
+				firstName
+				lastName
+				id
+			}
+			status
 		}
 	}
 `

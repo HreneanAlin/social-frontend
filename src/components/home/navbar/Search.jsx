@@ -1,5 +1,6 @@
 import {
 	Avatar,
+	Button,
 	IconButton,
 	InputBase,
 	List,
@@ -13,19 +14,26 @@ import SearchIcon from "@material-ui/icons/Search"
 import { useQuery } from "@apollo/client"
 import useStyles from "../style"
 import { USERS_BY_QUERY } from "../../../graphQl/querys/queries"
-import { Link, useRouteMatch } from "react-router-dom"
+import { Link, useRouteMatch, useHistory } from "react-router-dom"
+import SendFriendRequest from "./sendFriendRequest/SendFriendRequest"
 const Search = () => {
 	const [query, setQuery] = useState("")
 
 	const { data } = useQuery(USERS_BY_QUERY, {
 		variables: {
-			query
+			query,
 		},
 	})
 	let { url } = useRouteMatch()
 	const classes = useStyles()
 	const activate = e => {
 		setQuery(e.target.value)
+	}
+	const history = useHistory()
+
+	const handleRedirectToUser = (url, username) => {
+		setQuery("")
+		history.push(`${url}/user?username=${username}`)
 	}
 
 	return (
@@ -45,24 +53,22 @@ const Search = () => {
 				{data?.usersByQuery?.length ? (
 					<List className={classes.searchResults}>
 						{data.usersByQuery.map(cUser => (
-							<Link
-							    onClick={() => setQuery("")}
-								key={cUser.username}
-								className={classes.maskLink}
-								to={`${url}/user?username=${cUser.username}`}
-							>
-								<ListItem button>
-									<ListItemAvatar>
-										<Avatar
-											src={`http://127.0.0.1:8000/media/${cUser.profilePicture}`}
-										/>
-									</ListItemAvatar>
-									<ListItemText
-										primary={`${cUser.firstName} ${cUser.lastName}`}
-										secondary={`${cUser.username}`}
+							<ListItem button>
+								<ListItemAvatar
+									onClick={() => handleRedirectToUser(url, cUser.username)}
+								>
+									<Avatar
+										src={`http://127.0.0.1:8000/media/${cUser.profilePicture}`}
 									/>
-								</ListItem>
-							</Link>
+								</ListItemAvatar>
+								<ListItemText
+									onClick={() => handleRedirectToUser(url, cUser.username)}
+									primary={`${cUser.firstName} ${cUser.lastName}`}
+									secondary={`${cUser.username}`}
+								/>
+
+								<SendFriendRequest username={cUser.username} />
+							</ListItem>
 						))}
 					</List>
 				) : null}

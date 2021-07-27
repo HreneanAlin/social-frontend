@@ -11,13 +11,13 @@ import AccountCircle from "@material-ui/icons/AccountCircle"
 import MailIcon from "@material-ui/icons/Mail"
 import NotificationsIcon from "@material-ui/icons/Notifications"
 import MoreIcon from "@material-ui/icons/MoreVert"
-import PersonIcon from '@material-ui/icons/Person';
 import useStyles from "../style"
 import DesktopMenu from "./DesktopMenu"
 import MobileMenu from "./MobileMenu"
 import { Avatar, Divider, Paper } from "@material-ui/core"
 import Search from "./Search"
 import { Link } from "react-router-dom"
+import FriendRequests from "./friendRequests/FriendRequests"
 const Navbar = () => {
 	const {user}= useSelector(state=> state.user)
 	const [anchorEl, setAnchorEl] = React.useState(null)
@@ -75,11 +75,7 @@ const Navbar = () => {
 								<NotificationsIcon />
 							</Badge>
 						</IconButton>
-						<IconButton aria-label="show 17 new notifications" color="inherit">
-							<Badge badgeContent={17} color="secondary">
-								<PersonIcon />
-							</Badge>
-						</IconButton>
+					     <FriendRequests username={user.username}/>
 						<IconButton
 							edge="end"
 							aria-label="account of current user"

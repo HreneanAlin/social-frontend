@@ -49,7 +49,7 @@ const SearchPage = () => {
 								<Grid container>
 									<Grid item xs={12} md={12} lg={3}>
 										<Typography variant="h5">
-											{cUser.firstName} {cUser.lastName}
+											{cUser.firstName} {cUser.lastName} 
 										</Typography>
 									</Grid>
 									<Grid
