@@ -1,5 +1,7 @@
 import {
 	Avatar,
+	BottomNavigation,
+	BottomNavigationAction,
 	Button,
 	Card,
 	CardMedia,
@@ -8,12 +10,7 @@ import {
 	Grid,
 	Typography,
 } from "@material-ui/core"
-import {
-	Route,
-	Link,
-	Switch,
-	useRouteMatch,
-} from "react-router-dom"
+import { Route, Link, Switch, useRouteMatch, useHistory } from "react-router-dom"
 import React, { useState, useEffect } from "react"
 import classNames from "classname"
 import EventNoteIcon from "@material-ui/icons/EventNote"
@@ -24,20 +21,21 @@ import InfoIcon from "@material-ui/icons/Info"
 import useStyles from "../style"
 import UserPosts from "./userInfo/userPosts/UserPosts"
 import AboutUser from "./userInfo/AboutUser"
-import FrindsUser from "./userInfo/FrindsUser"
 import UserPhotos from "./userInfo/UserPhotos"
 import queryString from "query-string"
 import { useQuery } from "@apollo/client"
 import { USER_BY_USERNAME } from "../../../graphQl/querys/queries"
 import { useSelector, useDispatch } from "react-redux"
 import { setVisitator } from "../actions"
+import FriendsUser from "./userInfo/friends/FriendsUser"
 const UserPage = () => {
 	const classes = useStyles()
 	let { path, url } = useRouteMatch()
+	const [goUrl,setgoUrl] = useState(url)
 	const dispatch = useDispatch()
 	const { visitator } = useSelector(state => state.visitator)
 	const { username } = queryString.parse(window.location.search)
-	const { data} = useQuery(USER_BY_USERNAME, {
+	const { data } = useQuery(USER_BY_USERNAME, {
 		variables: {
 			username,
 		},
@@ -47,9 +45,13 @@ const UserPage = () => {
 			dispatch(setVisitator(data.userByUsername))
 		}
 	}, [data])
+	const history = useHistory()
 
 	return (
-		<Container maxWidth="lg" className={classNames(classes.userPage, classes.paddingPage)}>
+		<Container
+			maxWidth="lg"
+			className={classNames(classes.userPage, classes.paddingPage)}
+		>
 			<Card className={classNames(classes.positonRelative)}>
 				<CardMedia
 					className={classes.coverMedia}
@@ -67,8 +69,38 @@ const UserPage = () => {
 				@{visitator?.username}
 			</Typography>
 			<Divider />
-
-			<Grid container className={classes.userMenuContainer}>
+			<BottomNavigation
+				value={goUrl}
+				onChange={(event,newValue) =>{
+					console.log(newValue);
+					setgoUrl(newValue)
+					history.push(`${newValue}?username=${username}`)
+				}}
+				showLabels
+				className={classes.userMenuContainer}
+			>
+				<BottomNavigationAction
+					label="Posts"
+					value={`${url}`}
+					icon={<EventNoteIcon />}
+				/>
+				<BottomNavigationAction
+					label="About"
+					value={`${url}/about`}
+					icon={<InfoIcon />}
+				/>
+				<BottomNavigationAction
+					label="Friends"
+					value={`${url}/friends`}
+					icon={<EmojiPeopleIcon />}
+				/>
+				<BottomNavigationAction
+					label="Photos"
+					value={`${url}/photos`}
+					icon={<PhotoLibraryIcon />}
+				/>
+			</BottomNavigation>
+			{/* <Grid container className={classes.userMenuContainer}>
 				<Grid item xs={12} sm={6}>
 					<div
 						className={classes.buttonGroup}
@@ -116,7 +148,7 @@ const UserPage = () => {
 						</Button>
 					</div>
 				</Grid>
-			</Grid>
+			</Grid> */}
 			<Switch>
 				<Route exact path={path}>
 					<UserPosts />
@@ -125,7 +157,7 @@ const UserPage = () => {
 					<AboutUser />
 				</Route>
 				<Route path={`${path}/friends`}>
-					<FrindsUser />
+					<FriendsUser />
 				</Route>
 				<Route path={`${path}/photos`}>
 					<UserPhotos />

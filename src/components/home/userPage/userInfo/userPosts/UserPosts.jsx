@@ -21,7 +21,6 @@ const UserPosts = () => {
 		},
 		notifyOnNetworkStatusChange:true
 	})
-    console.log("🚀 ~ file: UserPosts.jsx ~ line 17 ~ UserPosts ~ networkStatus", networkStatus)
 
 
 	return (

@@ -150,7 +150,6 @@ const useStyles = makeStyles(theme => ({
 	},
 	userMenuContainer: {
 		width: "100%",
-		paddingTop: theme.spacing(6),
 		justifyContent: "center",
 		marginBottom: theme.spacing(5)
 	},

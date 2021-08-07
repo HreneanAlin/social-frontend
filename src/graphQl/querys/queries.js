@@ -46,6 +46,13 @@ export const USER_BY_USERNAME = gql`
 					image
 				}
 			}
+			friends {
+				id
+				username
+				firstName
+				lastName
+				profilePicture
+			}
 		}
 	}
 `

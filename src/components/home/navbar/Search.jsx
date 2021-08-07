@@ -19,6 +19,8 @@ const Search = () => {
 			query,
 		},
 	})
+    console.log("🚀 ~ file: Search.jsx ~ line 18 ~ Search ~ data", data)
+
 	let { url } = useRouteMatch()
 	const classes = useStyles()
 	const activate = e => {
