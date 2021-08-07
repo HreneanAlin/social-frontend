@@ -16,6 +16,7 @@ export const CURRENT_USER = gql`
 export const USERS_BY_QUERY = gql`
 	query UsersByQuery($query: String!) {
 		usersByQuery(query: $query) {
+			id
 			lastName
 			firstName
 			username
@@ -133,5 +134,11 @@ export const MY_FRIEND_REQUESTS = gql`
 			}
 			status
 		}
+	}
+`
+
+export const CHECK_USER_RELATION = gql`
+	query CheckUserRelation($username: String!) {
+		checkUserRelation(username: $username)
 	}
 `

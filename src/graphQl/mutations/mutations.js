@@ -145,3 +145,11 @@ export const SEND_FRIEND_REQUEST = gql`
 		}
 	}
 `
+
+export const ACCEPT_FRIEND_REQUEST = gql`
+	mutation AcceptFriendRequest($friendRequestId: Int!) {
+		acceptFriendRequest(friendRequestId: $friendRequestId) {
+			success
+		}
+	}
+`

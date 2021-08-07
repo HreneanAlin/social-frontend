@@ -1,12 +1,7 @@
 import {
-	Avatar,
-	Button,
 	IconButton,
 	InputBase,
 	List,
-	ListItem,
-	ListItemAvatar,
-	ListItemText,
 	Paper,
 } from "@material-ui/core"
 import React, { useState } from "react"
@@ -15,7 +10,7 @@ import { useQuery } from "@apollo/client"
 import useStyles from "../style"
 import { USERS_BY_QUERY } from "../../../graphQl/querys/queries"
 import { Link, useRouteMatch, useHistory } from "react-router-dom"
-import SendFriendRequest from "./sendFriendRequest/SendFriendRequest"
+import UserFound from "./userFound/UserFound"
 const Search = () => {
 	const [query, setQuery] = useState("")
 
@@ -53,22 +48,12 @@ const Search = () => {
 				{data?.usersByQuery?.length ? (
 					<List className={classes.searchResults}>
 						{data.usersByQuery.map(cUser => (
-							<ListItem button>
-								<ListItemAvatar
-									onClick={() => handleRedirectToUser(url, cUser.username)}
-								>
-									<Avatar
-										src={`http://127.0.0.1:8000/media/${cUser.profilePicture}`}
-									/>
-								</ListItemAvatar>
-								<ListItemText
-									onClick={() => handleRedirectToUser(url, cUser.username)}
-									primary={`${cUser.firstName} ${cUser.lastName}`}
-									secondary={`${cUser.username}`}
-								/>
-
-								<SendFriendRequest username={cUser.username} />
-							</ListItem>
+							<UserFound
+								key={cUser.id}
+								cUser={cUser}
+								handleRedirectToUser={handleRedirectToUser}
+								url={url}
+							/>
 						))}
 					</List>
 				) : null}
