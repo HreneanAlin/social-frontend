@@ -13,7 +13,7 @@ const AcceptFriend = ({ id }) => {
 			variables: {
 				friendRequestId: id,
 			},
-			update: (store, { data }) => {
+			update: (store) => {
 				const normalizedId = store.identify({
 					id,
 					__typename: "FriendRequestType",

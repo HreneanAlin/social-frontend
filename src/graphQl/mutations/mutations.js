@@ -153,3 +153,11 @@ export const ACCEPT_FRIEND_REQUEST = gql`
 		}
 	}
 `
+
+export const DECLINE_FRIEND_REQUEST = gql`
+    mutation DeclineFriendRequest($friendRequestId: Int!) {
+		declineFriendRequest(friendRequestId: $friendRequestId){
+			success
+		}
+	}
+`

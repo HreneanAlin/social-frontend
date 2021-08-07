@@ -20,7 +20,7 @@ const FriendRequest = ({ friendReq }) => {
 			</ListItemAvatar>
 			<Typography>{friendReq.userFrom.username}</Typography>
 			<AcceptFriend id={friendReq.id} />
-			<DeclineFriend />
+			<DeclineFriend id={friendReq.id}/>
 		</MenuItem>
 	)
 }
