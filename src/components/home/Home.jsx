@@ -7,29 +7,37 @@ import Navbar from "./navbar/Navbar"
 import { useSelector, useDispatch } from "react-redux"
 import { setUser } from "./actions"
 import {
+	Redirect,
 	Route,
 	Switch,
 	useRouteMatch,
 } from "react-router-dom"
 import SearchPage from "./searchPage/SearchPage"
-import { Container } from "@material-ui/core"
+import { CircularProgress, Container } from "@material-ui/core"
 import UserPage from "./userPage/UserPage"
 import AddPost from "./addPost/AddPost"
 import MyPostsAndFriends from "./myPostAndFriends/MyPostsAndFriends"
+import classNames from "classname"
+
 
 const Home = () => {
 	const { loading, error, data } = useQuery(CURRENT_USER)
 	const classes = useStyles()
 	const dispatch = useDispatch()
 	let { path, url } = useRouteMatch()
-	console.log("🚀 ~ file: Home.jsx ~ line 23 ~ Home ~ path,", `${path}/search`)
 
 	if (error) {
 		console.log(error)
 	}
-	console.log(data)
 	if (data?.me?.username) {
 		dispatch(setUser(data.me))
+	}
+	if(loading){
+		return(
+			<Container maxWidth={false} className={classNames(classes.mainPage,classes.mainloadingContainer)}>
+                <CircularProgress size={300}/>
+			</Container>
+		)
 	}
 
 	return (
@@ -52,7 +60,7 @@ const Home = () => {
 					</Switch>
 				</>
 			) : (
-				"not autheticated"
+				<Redirect to="/login" />
 			)}
 		</Container>
 	)

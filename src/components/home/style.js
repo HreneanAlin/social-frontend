@@ -293,6 +293,11 @@ const useStyles = makeStyles(theme => ({
 	},
 	addCommentButton:{
 		height:theme.spacing(7)
+	},
+	mainloadingContainer:{
+	   display:"grid",
+	   height:"100vh",
+	   placeItems:"center",
 	}
 }))
 

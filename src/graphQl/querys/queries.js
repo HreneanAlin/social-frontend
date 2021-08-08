@@ -9,6 +9,7 @@ export const CURRENT_USER = gql`
 			firstName
 			lastName
 			profilePicture
+			coverImage
 		}
 	}
 `
@@ -34,6 +35,7 @@ export const USER_BY_USERNAME = gql`
 			lastName
 			country
 			profilePicture
+			coverImage
 			dateJoined
 			lastLogin
 			postSet {

@@ -16,13 +16,14 @@ import useStyles from "../style"
 import { useSelector } from "react-redux"
 import { useDropzone } from "react-dropzone"
 import { useMutation } from "@apollo/client"
-import { Redirect } from "react-router-dom"
+import { Redirect, useHistory } from "react-router-dom"
 import {
 	ADD_POST,
 	ADD_TEMPORARY_IMAGE,
 } from "../../../graphQl/mutations/mutations"
 import ImagesPreview from "./imagesPreview/ImagesPreview"
 const AddPost = () => {
+	const history = useHistory()
 	const classes = useStyles()
 	const { user } = useSelector(state => state.user)
 	const [open, setOpen] = useState(false)
@@ -73,7 +74,7 @@ const AddPost = () => {
 
 	const handleClose = () => {
 		setOpen(false)
-		window.location.replace("/home")
+		history.go(0)
 	}
 	const handleSubmit = e => {
 		e.preventDefault()
@@ -87,7 +88,7 @@ const AddPost = () => {
 		e.target.reset()
 	}
 	if (postData?.addPost?.success) {
-		return <Redirect to="/"/>
+		history.go(0)
 	}
 
 	return (

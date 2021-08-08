@@ -155,9 +155,20 @@ export const ACCEPT_FRIEND_REQUEST = gql`
 `
 
 export const DECLINE_FRIEND_REQUEST = gql`
-    mutation DeclineFriendRequest($friendRequestId: Int!) {
-		declineFriendRequest(friendRequestId: $friendRequestId){
+	mutation DeclineFriendRequest($friendRequestId: Int!) {
+		declineFriendRequest(friendRequestId: $friendRequestId) {
 			success
+		}
+	}
+`
+
+export const CHANGE_COVER_IMAGE = gql`
+	mutation ChangeCoverImage($coverImage: Upload!) {
+		changeCoverImage(coverImage: $coverImage) {
+			userCoverImage {
+				coverImage
+				id
+			}
 		}
 	}
 `

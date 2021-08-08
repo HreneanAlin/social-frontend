@@ -10,7 +10,13 @@ import {
 	Grid,
 	Typography,
 } from "@material-ui/core"
-import { Route, Link, Switch, useRouteMatch, useHistory } from "react-router-dom"
+import {
+	Route,
+	Link,
+	Switch,
+	useRouteMatch,
+	useHistory,
+} from "react-router-dom"
 import React, { useState, useEffect } from "react"
 import classNames from "classname"
 import EventNoteIcon from "@material-ui/icons/EventNote"
@@ -28,12 +34,15 @@ import { USER_BY_USERNAME } from "../../../graphQl/querys/queries"
 import { useSelector, useDispatch } from "react-redux"
 import { setVisitator } from "../actions"
 import FriendsUser from "./userInfo/friends/FriendsUser"
+import CoverImageCard from "./cover/CoverImageCard"
+import CoverImageWithUpload from "./cover/CoverImageWithUpload"
 const UserPage = () => {
 	const classes = useStyles()
 	let { path, url } = useRouteMatch()
-	const [goUrl,setgoUrl] = useState(url)
+	const [goUrl, setgoUrl] = useState(url)
 	const dispatch = useDispatch()
 	const { visitator } = useSelector(state => state.visitator)
+	const { user } = useSelector(state => state.user)
 	const { username } = queryString.parse(window.location.search)
 	const { data } = useQuery(USER_BY_USERNAME, {
 		variables: {
@@ -52,16 +61,12 @@ const UserPage = () => {
 			maxWidth="lg"
 			className={classNames(classes.userPage, classes.paddingPage)}
 		>
-			<Card className={classNames(classes.positonRelative)}>
-				<CardMedia
-					className={classes.coverMedia}
-					image="https://cdn.cliqueinc.com/posts/281986/fruits-that-are-high-in-sugar-281986-1566343297126-main.500x0c.jpg?interlace=true&quality=70"
-				/>
-				<Avatar
-					src={`http://127.0.0.1:8000/media/${visitator?.profilePicture}`}
-					className={classes.profileAvatar}
-				/>
-			</Card>
+			{username === user.username ? (
+				<CoverImageWithUpload classes={classes} coverImage={user?.coverImage} profilePicture={user?.profilePicture}  />
+			) : (
+				<CoverImageCard classes={classes} coverImage={visitator?.coverImage} profilePicture={visitator?.profilePicture} />
+			)}
+
 			<Typography variant="h3" align="center" className={classes.userTitle}>
 				{visitator?.firstName} {visitator?.lastName}
 			</Typography>
@@ -71,8 +76,8 @@ const UserPage = () => {
 			<Divider />
 			<BottomNavigation
 				value={goUrl}
-				onChange={(event,newValue) =>{
-					console.log(newValue);
+				onChange={(event, newValue) => {
+					console.log(newValue)
 					setgoUrl(newValue)
 					history.push(`${newValue}?username=${username}`)
 				}}
@@ -100,55 +105,6 @@ const UserPage = () => {
 					icon={<PhotoLibraryIcon />}
 				/>
 			</BottomNavigation>
-			{/* <Grid container className={classes.userMenuContainer}>
-				<Grid item xs={12} sm={6}>
-					<div
-						className={classes.buttonGroup}
-						
-						variant="contained"
-					>
-						<Button>
-							<Link
-								to={`/home/user?username=${username}`}
-								className={classes.maskLink}
-							>
-								<EventNoteIcon />
-								<Typography> Posts</Typography>
-							</Link>
-						</Button>
-
-						<Button>
-							<Link
-								to={`${url}/about?username=${username}`}
-								className={classes.maskLink}
-							>
-								<div>
-									<InfoIcon />
-									<Typography> About</Typography>
-								</div>
-							</Link>
-						</Button>
-						<Button>
-							<Link
-								to={`${url}/friends?username=${username}`}
-								className={classes.maskLink}
-							>
-								<EmojiPeopleIcon />
-								<Typography> Friends</Typography>
-							</Link>
-						</Button>
-						<Button>
-							<Link
-								to={`${url}/photos?username=${username}`}
-								className={classes.maskLink}
-							>
-								<PhotoLibraryIcon />
-								<Typography> Photos</Typography>
-							</Link>
-						</Button>
-					</div>
-				</Grid>
-			</Grid> */}
 			<Switch>
 				<Route exact path={path}>
 					<UserPosts />
@@ -163,14 +119,6 @@ const UserPage = () => {
 					<UserPhotos />
 				</Route>
 			</Switch>
-
-			{/* <Grid className={classes.profileContent} container>
-				<Grid item xs={12} md={6}>
-					<Typography variant="h4" align="center" gutterBottom>
-						About
-					</Typography>
-				</Grid>
-			</Grid> */}
 		</Container>
 	)
 }

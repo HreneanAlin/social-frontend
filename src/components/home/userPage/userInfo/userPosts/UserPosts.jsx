@@ -6,6 +6,7 @@ import { useSelector } from "react-redux"
 import { Waypoint } from "react-waypoint"
 import { useQuery } from "@apollo/client"
 import queryString from "query-string"
+import AddPost from "../../../addPost/AddPost"
 
 import { POSTS_BY_USERNAME } from "../../../../../graphQl/querys/queries"
 
@@ -13,28 +14,32 @@ const first = 2
 const UserPosts = () => {
 	const classes = useStyle()
 	const { visitator } = useSelector(state => state.visitator)
+	const {user} = useSelector(state => state.user)
 	const { username } = queryString.parse(window.location.search)
-	const { data, loading, fetchMore,networkStatus } = useQuery(POSTS_BY_USERNAME, {
-		variables: {
-			username,
-			first: first,
-		},
-		notifyOnNetworkStatusChange:true
-	})
-
+	const { data, loading, fetchMore, networkStatus } = useQuery(
+		POSTS_BY_USERNAME,
+		{
+			variables: {
+				username,
+				first: first,
+			},
+			notifyOnNetworkStatusChange: true,
+		}
+	)
 
 	return (
 		<Container className={classes.postsContainer}>
 			{username && fetchMore ? (
 				<>
+					{username === user.username && <AddPost/>}
 					<Typography variant="h3" align="center" gutterBottom>
 						POSTS
 					</Typography>
 
 					{data?.postsByUsernamePagination?.postsByUsername?.length ? (
 						<>
-							{data?.postsByUsernamePagination.postsByUsername
-								.map((post, index) => (
+							{data?.postsByUsernamePagination.postsByUsername.map(
+								(post, index) => (
 									<React.Fragment key={index}>
 										<PostCard
 											key={post.id}
@@ -79,9 +84,12 @@ const UserPosts = () => {
 											/>
 										)}
 									</React.Fragment>
-								))}
-								{networkStatus === 3 && <CircularProgress/>}
-								{!data?.postsByUsernamePagination?.hasNext && <Typography>No more Posts</Typography>}
+								)
+							)}
+							{networkStatus === 3 && <CircularProgress />}
+							{!data?.postsByUsernamePagination?.hasNext && (
+								<Typography>No more Posts</Typography>
+							)}
 						</>
 					) : (
 						<Typography>{username} has no Posts</Typography>
