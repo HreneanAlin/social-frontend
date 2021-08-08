@@ -16,7 +16,7 @@ import DesktopMenu from "./DesktopMenu"
 import MobileMenu from "./MobileMenu"
 import { Avatar, Divider, Paper } from "@material-ui/core"
 import Search from "./Search"
-import { Link } from "react-router-dom"
+import { Link, useHistory } from "react-router-dom"
 import FriendRequests from "./friendRequests/FriendRequests"
 const Navbar = () => {
 	const {user}= useSelector(state=> state.user)
@@ -25,6 +25,8 @@ const Navbar = () => {
 	const classes = useStyles()
 	const isMenuOpen = Boolean(anchorEl)
 	const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
+	const history = useHistory()
+
 
 	const handleProfileMenuOpen = event => {
 		setAnchorEl(event.currentTarget)
@@ -42,6 +44,10 @@ const Navbar = () => {
 	const handleMobileMenuOpen = event => {
 		setMobileMoreAnchorEl(event.currentTarget)
 	}
+
+	const handleRedirectToUserPage = () => {
+		history.push(`/home/user?username=${user.username}`)
+   }
 
 	const menuId = "primary-search-account-menu"
 
@@ -114,6 +120,8 @@ const Navbar = () => {
 				menuId={menuId}
 				isMenuOpen={isMenuOpen}
 				handleMenuClose={handleMenuClose}
+				handleRedirectToUserPage ={handleRedirectToUserPage}
+				user = {user}
 			/>
 		</div>
 	)

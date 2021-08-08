@@ -15,6 +15,7 @@ import SearchPage from "./searchPage/SearchPage"
 import { Container } from "@material-ui/core"
 import UserPage from "./userPage/UserPage"
 import AddPost from "./addPost/AddPost"
+import MyPostsAndFriends from "./myPostAndFriends/MyPostsAndFriends"
 
 const Home = () => {
 	const { loading, error, data } = useQuery(CURRENT_USER)
@@ -40,6 +41,7 @@ const Home = () => {
 					<Switch>
 						<Route exact path={path}>
 							<AddPost/>
+							<MyPostsAndFriends/>
 						</Route>
 						<Route path={`${path}/search`}>
 							<SearchPage />

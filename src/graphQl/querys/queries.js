@@ -149,3 +149,28 @@ export const CHECK_USER_RELATION = gql`
 		checkUserRelation(username: $username)
 	}
 `
+
+export const MY_POSTS_AND_FRIENDS = gql`
+	query MyPostAndFriendsPagination($first: Int!, $skip: Int) {
+		myPostsAndFriendsPagination(first: $first, skip: $skip) {
+			hasNext
+			postsByUsername {
+				id
+				text
+				title
+				date
+				user {
+					id
+					firstName
+					lastName
+					profilePicture
+					username
+				}
+				postimageSet {
+					title
+					image
+				}
+			}
+		}
+	}
+`

@@ -62,7 +62,17 @@ const useGeneralStyles = makeStyles(theme => ({
 
     bgGreen: {
 		backgroundColor:"green"
-	}
+	},
+	postsContainer: {
+		display: "flex",
+		flexDirection: "column",
+		alignItems: "center",
+		justifyContent: "center",
+		
+		[theme.breakpoints.up("md")]: {
+			padding:theme.spacing(0,30),
+		},
+	},
 }))
 
 export default useGeneralStyles

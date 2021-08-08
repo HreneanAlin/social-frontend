@@ -1,10 +1,12 @@
 import { Menu, MenuItem } from "@material-ui/core"
-import { Link } from "react-router-dom"
+import { Link, useHistory } from "react-router-dom"
 import React from "react"
 import useStyles from "../style"
 
-const DesktopMenu = ({anchorEl, menuId,isMenuOpen,handleMenuClose}) => {
+const DesktopMenu = ({anchorEl, menuId,isMenuOpen,handleMenuClose ,handleRedirectToUserPage}) => {
 	const classes = useStyles()
+
+	
 	return (
 		<Menu
 			anchorEl={anchorEl}
@@ -15,7 +17,7 @@ const DesktopMenu = ({anchorEl, menuId,isMenuOpen,handleMenuClose}) => {
 			open={isMenuOpen}
 			onClose={handleMenuClose}
 		>
-			<MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+			<MenuItem onClick={handleRedirectToUserPage}>Profile</MenuItem>
 			<MenuItem onClick={handleMenuClose}>My account</MenuItem>
 			<MenuItem>
 			 <Link className={classes.maskLink} to="/logout">Log Out</Link>

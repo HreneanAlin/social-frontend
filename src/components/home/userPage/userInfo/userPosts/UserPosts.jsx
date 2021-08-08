@@ -34,8 +34,6 @@ const UserPosts = () => {
 					{data?.postsByUsernamePagination?.postsByUsername?.length ? (
 						<>
 							{data?.postsByUsernamePagination.postsByUsername
-								//.slice()
-								//.sort((prev, next) => next.id - prev.id)
 								.map((post, index) => (
 									<React.Fragment key={index}>
 										<PostCard
