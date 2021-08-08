@@ -4,8 +4,10 @@ import { useMutation } from "@apollo/client"
 import { printErrors } from "../../helpers/helpers"
 import { Button, Container, TextField, Typography } from "@material-ui/core"
 import useStyle from "./style"
+import { Redirect } from "react-router-dom"
 const SendResetPassword = () => {
 	const [email, setEmail] = useState()
+	const tkn = localStorage.getItem("token")
 	const [sendMail, { data, error, loading }] = useMutation(
 		SEND_PASSWORD_RESET_EMAIL
 	)
@@ -16,6 +18,10 @@ const SendResetPassword = () => {
 		sendMail({
 			variables: { email },
 		})
+	}
+
+	if(tkn){
+		return <Redirect to="/"/>
 	}
 	if (loading) return <p>Loading...</p>
 

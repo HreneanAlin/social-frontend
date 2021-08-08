@@ -54,12 +54,13 @@ export const LOGIN_USER = gql`
 			token
 			refreshToken
 			user {
+				id
 				username
-				isStaff
-				lastLogin
+				verified
 				firstName
 				lastName
-				email
+				profilePicture
+				coverImage
 			}
 		}
 	}

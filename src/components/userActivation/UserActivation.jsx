@@ -12,6 +12,7 @@ import { printErrors } from "../../helpers/helpers"
 const UserActivation = () => {
 	const generalClasses = useGeneralStyles()
 	const [empty, setEmpty] = useState(false)
+	const loggedToken = localStorage.getItem("token")
 	const [activateAccount, { data, error, loading }] = useMutation(
 		VERIFY_ACCOUNT
 	)
@@ -30,6 +31,9 @@ const UserActivation = () => {
 	}, [])
 	if(empty){
 		return <Redirect to="/register"/>
+	}
+	if(loggedToken){
+		return <Redirect to="/"/>
 	}
 	
 	if (loading) return <h1>Loading...</h1>

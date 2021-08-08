@@ -3,7 +3,7 @@ import { useMutation } from "@apollo/client"
 import { REGISTER_MUTATION } from "../../graphQl/mutations/mutations"
 import { getCountries } from "../../api/api"
 import ResendActivation from "../resendActivation/ResendActivation"
-import { Link } from "react-router-dom"
+import { Link, Redirect } from "react-router-dom"
 import { printErrors } from "../../helpers/helpers"
 import {
 	Avatar,
@@ -25,6 +25,7 @@ import ImageUpload from "../smallComponents/ImageUpload"
 
 const Register = () => {
 	const [register, { data, error, loading }] = useMutation(REGISTER_MUTATION)
+	const tkn = localStorage.getItem("token")
 	const [firstName, setFirstName] = useState()
 	const [lastName, setLastName] = useState()
 	const [username, setUsername] = useState()
@@ -54,6 +55,10 @@ const Register = () => {
 			}
 		}
 	}, [data])
+
+	if(tkn){
+		return <Redirect to="/"/>
+	}
 
 	const registerUser = e => {
 		e.preventDefault()

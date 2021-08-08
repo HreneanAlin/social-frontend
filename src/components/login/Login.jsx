@@ -10,7 +10,7 @@ import {
 	Grid,
 	Typography,
 	Container,
-
+	CircularProgress,
 } from "@material-ui/core"
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined"
 import { Link } from "react-router-dom"
@@ -19,11 +19,12 @@ import useStyles from "./style"
 import classNames from "classname"
 import PasswordField from "../smallComponents/PasswordField"
 import useGeneralStyles from "../../generalStyle"
+import { CURRENT_USER } from "../../graphQl/querys/queries"
 
 const Login = () => {
 	const [email, setEmail] = useState()
 	const [password, setPassword] = useState()
-	
+	const tkn = localStorage.getItem("token")
 	const [login, { data, error, loading }] = useMutation(LOGIN_USER)
 	const classes = useStyles()
 	const generalClasses = useGeneralStyles()
@@ -50,15 +51,34 @@ const Login = () => {
 				email,
 				password,
 			},
+			update: (store, { data }) => {
+				if (data?.tokenAuth.user) {
+					store.writeQuery({
+						query: CURRENT_USER,
+						data: {
+							me: data.tokenAuth.user,
+						},
+					})
+				}
+			},
 		})
 	}
-
-
-	if (loading) return <p>Loading...</p>
+	
+	if(tkn){
+		return <Redirect to="/"/>
+	}
+	
+	if (loading)
+		return (
+			<Container component="main" maxWidth="xs">
+				<div className={classes.paper}>
+					<CircularProgress />
+				</div>
+			</Container>
+		)
 	if (data?.tokenAuth?.success) return <Redirect to="/home" />
 	return (
 		<Container component="main" maxWidth="xs">
-			
 			<div className={classes.paper}>
 				<Avatar className={classes.avatar}>
 					<LockOutlinedIcon />
@@ -82,11 +102,11 @@ const Login = () => {
 						autoComplete="email"
 						autoFocus
 					/>
-			        <PasswordField
-					 name="password"
-					 label="Password"
-					 password={password}
-					 setPassword={setPassword}
+					<PasswordField
+						name="password"
+						label="Password"
+						password={password}
+						setPassword={setPassword}
 					/>
 					<Button
 						type="submit"
