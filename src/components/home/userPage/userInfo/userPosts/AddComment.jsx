@@ -1,43 +1,26 @@
-import { Avatar, Button, TextField } from "@material-ui/core"
-
-import SendIcon from "@material-ui/icons/Send"
+import { Avatar, TextField } from "@material-ui/core"
 import React, { useState, useRef } from "react"
 import { useSelector } from "react-redux"
 import { useMutation } from "@apollo/client"
 import useStyles from "../../../style"
 import { ADD_COMMENT_POST } from "../../../../../graphQl/mutations/mutations"
-import { COMMENTS_BY_POST_PAGINATION, CURRENT_USER } from "../../../../../graphQl/querys/queries"
-const AddComment = ({ id, fetchMoreComments, setRender }) => {
+
+const AddComment = ({ id }) => {
 	const { user } = useSelector(state => state.user)
 	const [commentText, setCommentText] = useState()
 	const [addComment] = useMutation(ADD_COMMENT_POST)
 	const commentEl = useRef()
 	const classes = useStyles()
-	const prepareMessage = e => {
+	const prepareMessage = () => {
 		if (!commentText) return
 		addComment({
 			variables: {
 				text: commentText,
 				postId: id,
             },
-            // update:(store,{data})=>{
-            //     const commentData = store.readQuery({query:COMMENTS_BY_POST_PAGINATION,returnPartialData:true})
-            //     console.log("🚀 ~ file: AddComment.jsx ~ line 25 ~ AddComment ~ commentData", commentData)
-            //     store.writeQuery({
-            //         query:COMMENTS_BY_POST_PAGINATION,
-            //         data:{
-            //             commentsByPostPagination:{
-            //                 _typename: "CommentPagination",
-            //                 commentsByPost:[data.addComment,...commentData.commentsByPostPagination.commentsByPost],
-            //                 hasNext: commentData.commentsByPostPagination.hasNext
-            //             }
-            //         }
-            //     })
-            // }
 		})
 		const currentInput = commentEl.current.getElementsByTagName("input")[0]
 		currentInput.value = ""
-		setRender(true)
 	}
 
 	return (

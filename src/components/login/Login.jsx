@@ -27,23 +27,8 @@ const Login = () => {
 	const tkn = localStorage.getItem("token")
 	const [login, { data, error, loading }] = useMutation(LOGIN_USER)
 	const classes = useStyles()
-	const generalClasses = useGeneralStyles()
 
-	useEffect(() => {
-		if (data && !loading) {
-			console.log(data)
-			const {
-				tokenAuth: { success, errors, token, refreshToken, user },
-			} = data
-			if (success && token && user) {
-				user.token = token
-				user.refreshToken = refreshToken
-				localStorage.setItem("token", token)
-				localStorage.setItem("refreshToken", refreshToken)
-				//localStorage.setItem("user", JSON.stringify(user))
-			}
-		}
-	}, [data])
+
 	const prepareLogin = e => {
 		e.preventDefault()
 		login({
@@ -53,6 +38,8 @@ const Login = () => {
 			},
 			update: (store, { data }) => {
 				if (data?.tokenAuth.user) {
+					localStorage.setItem("token",data.tokenAuth.token)
+					localStorage.setItem("refreshToken",data.tokenAuth.refreshToken)
 					store.writeQuery({
 						query: CURRENT_USER,
 						data: {

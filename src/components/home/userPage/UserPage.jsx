@@ -90,19 +90,9 @@ const UserPage = () => {
 					icon={<EventNoteIcon />}
 				/>
 				<BottomNavigationAction
-					label="About"
-					value={`${url}/about`}
-					icon={<InfoIcon />}
-				/>
-				<BottomNavigationAction
 					label="Friends"
 					value={`${url}/friends`}
 					icon={<EmojiPeopleIcon />}
-				/>
-				<BottomNavigationAction
-					label="Photos"
-					value={`${url}/photos`}
-					icon={<PhotoLibraryIcon />}
 				/>
 			</BottomNavigation>
 			<Switch>

@@ -9,14 +9,14 @@ import {
 	Typography,
 } from "@material-ui/core"
 import { DateTime } from "luxon"
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import useStyles from "../../../style"
-import { useQuery, useSubscription, } from "@apollo/client"
+import { useQuery, } from "@apollo/client"
 import { COMMENTS_BY_POST_PAGINATION } from "../../../../../graphQl/querys/queries"
 import { Waypoint } from "react-waypoint"
 import AddComment from "./AddComment"
 import { NEW_POST_COMMENT_SUB } from "../../../../../graphQl/subscriptions/subscriptions"
-const CommentSection = ({ id, setRender }) => {
+const CommentSection = ({ id }) => {
 	const classes = useStyles()
 	const { data, fetchMore, networkStatus, subscribeToMore } = useQuery(
 		COMMENTS_BY_POST_PAGINATION,
@@ -132,7 +132,7 @@ useEffect(() => {
 					{networkStatus === 3 && <CircularProgress />}
 				</>
 			) : null}
-			<AddComment setRender={setRender} fetchMoreComments={fetchMore} id={id} />
+			<AddComment fetchMoreComments={fetchMore} id={id} />
 		</>
 	)
 }

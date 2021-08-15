@@ -10,6 +10,7 @@ export const CURRENT_USER = gql`
 			lastName
 			profilePicture
 			coverImage
+			isStaff
 		}
 	}
 `
@@ -175,4 +176,19 @@ export const MY_POSTS_AND_FRIENDS = gql`
 			}
 		}
 	}
+`
+
+export const GET_ALL_USERS = gql`
+  query GetAllUsers{
+	  getAllUsers{
+		  id
+		  username
+		  friends{
+			  id
+		  }
+		  declinedFriends{
+			  id
+		  }
+	  }
+  }
 `

@@ -3,10 +3,17 @@ import { Link, useHistory } from "react-router-dom"
 import React from "react"
 import useStyles from "../style"
 
-const DesktopMenu = ({anchorEl, menuId,isMenuOpen,handleMenuClose ,handleRedirectToUserPage}) => {
+const DesktopMenu = ({
+	anchorEl,
+	menuId,
+	isMenuOpen,
+	handleMenuClose,
+	handleRedirectToUserPage,
+	handleRedirectToStatistics,
+	user,
+}) => {
 	const classes = useStyles()
 
-	
 	return (
 		<Menu
 			anchorEl={anchorEl}
@@ -18,9 +25,13 @@ const DesktopMenu = ({anchorEl, menuId,isMenuOpen,handleMenuClose ,handleRedirec
 			onClose={handleMenuClose}
 		>
 			<MenuItem onClick={handleRedirectToUserPage}>Profile</MenuItem>
-			<MenuItem onClick={handleMenuClose}>My account</MenuItem>
+			{user.isStaff && (
+				<MenuItem onClick={handleRedirectToStatistics}>Statistics</MenuItem>
+			)}
 			<MenuItem>
-			 <Link className={classes.maskLink} to="/logout">Log Out</Link>
+				<Link className={classes.maskLink} to="/logout">
+					Log Out
+				</Link>
 			</MenuItem>
 		</Menu>
 	)

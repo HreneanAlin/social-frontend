@@ -4,13 +4,14 @@ import MailIcon from "@material-ui/icons/Mail"
 import NotificationsIcon from "@material-ui/icons/Notifications"
 import AccountCircle from "@material-ui/icons/AccountCircle"
 import React from "react"
+import FriendRequests from "./friendRequests/FriendRequests"
 
 const MobileMenu = ({
 	mobileMoreAnchorEl,
 	mobileMenuId,
 	isMobileMenuOpen,
 	handleMobileMenuClose,
-	handleProfileMenuOpen,
+	handleProfileMenuOpen
 }) => {
 	const {user}= useSelector(state=> state.user)
 	return (
@@ -24,20 +25,7 @@ const MobileMenu = ({
 			onClose={handleMobileMenuClose}
 		>
 			<MenuItem>
-				<IconButton aria-label="show 4 new mails" color="inherit">
-					<Badge badgeContent={4} color="secondary">
-						<MailIcon />
-					</Badge>
-				</IconButton>
-				<p>Messages</p>
-			</MenuItem>
-			<MenuItem>
-				<IconButton aria-label="show 11 new notifications" color="inherit">
-					<Badge badgeContent={11} color="secondary">
-						<NotificationsIcon />
-					</Badge>
-				</IconButton>
-				<p>Notifications</p>
+			  <FriendRequests username={user.username}/>
 			</MenuItem>
 			<MenuItem onClick={handleProfileMenuOpen}>
 				<IconButton

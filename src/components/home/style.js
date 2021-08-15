@@ -5,6 +5,10 @@ const useStyles = makeStyles(theme => ({
 	paddingPage:{
     paddingTop:theme.spacing(8)
 	},
+	padding10:{
+    paddingTop:"5rem"
+
+	},
 	grow: {
 		flexGrow: 1,
 	},
@@ -144,6 +148,9 @@ const useStyles = makeStyles(theme => ({
 	},
 	userTitle: {
 		marginTop: theme.spacing(6),
+	},
+	staffTitle: {
+		marginTop: "16rem",
 	},
 	profileContent: {
 		paddingTop: "2rem",
