@@ -183,6 +183,7 @@ export const GET_ALL_USERS = gql`
 	  getAllUsers{
 		  id
 		  username
+		  dateJoined
 		  friends{
 			  id
 		  }

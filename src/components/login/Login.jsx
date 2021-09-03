@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import { LOGIN_USER } from "../../graphQl/mutations/mutations"
-import { useMutation } from "@apollo/client"
+import { useMutation , useQuery} from "@apollo/client"
 import { Redirect } from "react-router-dom"
 import {
 	Avatar,
 	Button,
-	CssBaseline,
 	TextField,
 	Grid,
 	Typography,
@@ -18,14 +17,13 @@ import { printErrors } from "../../helpers/helpers"
 import useStyles from "./style"
 import classNames from "classname"
 import PasswordField from "../smallComponents/PasswordField"
-import useGeneralStyles from "../../generalStyle"
 import { CURRENT_USER } from "../../graphQl/querys/queries"
 
 const Login = () => {
 	const [email, setEmail] = useState()
 	const [password, setPassword] = useState()
-	const tkn = localStorage.getItem("token")
-	const [login, { data, error, loading }] = useMutation(LOGIN_USER)
+	const {data:myData} = useQuery(CURRENT_USER)
+	const [login, { data, loading }] = useMutation(LOGIN_USER)
 	const classes = useStyles()
 
 
@@ -51,7 +49,7 @@ const Login = () => {
 		})
 	}
 	
-	if(tkn){
+    if(myData?.me?.username){
 		return <Redirect to="/"/>
 	}
 	
@@ -71,7 +69,7 @@ const Login = () => {
 					<LockOutlinedIcon />
 				</Avatar>
 				<Typography component="h1" variant="h5" gutterBottom>
-					Wellcome to FaceRequired
+					Welcome to FaceRequired
 				</Typography>
 				<Typography variant="h5">Sign in</Typography>
 				{data?.tokenAuth?.errors ? printErrors(data.tokenAuth.errors) : null}

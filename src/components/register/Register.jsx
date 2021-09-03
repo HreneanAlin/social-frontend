@@ -8,6 +8,7 @@ import { printErrors } from "../../helpers/helpers"
 import {
 	Avatar,
 	Button,
+	CircularProgress,
 	Container,
 	FormControl,
 	Grid,
@@ -76,7 +77,6 @@ const Register = () => {
 			variables,
 		})
 	}
-	if (loading) return <p>Loading...</p>
 	return (
 		<Container component="main" maxWidth="xs">
 			<div className={generalClasses.paper}>
@@ -84,9 +84,10 @@ const Register = () => {
 					<AssignmentIcon />
 				</Avatar>
 				<Typography component="h1" variant="h5" gutterBottom>
-					Wellcome to FaceRequired
+					Welcome to FaceRequired
 				</Typography>
 				{data?.register?.errors ? printErrors(data.register.errors) : null}
+				{loading && <CircularProgress/>}
 				{data?.register?.success ? (
 					<div>
 						{resend ? (
